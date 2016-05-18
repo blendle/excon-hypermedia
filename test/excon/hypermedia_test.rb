@@ -9,75 +9,56 @@ module Excon
   #
   class HypermediaTest < Minitest::Test
     def entrypoint
-      <<~EOF
-        {
-          "_links": {
-            "hello": {
-              "href":"http://www.example.com/hello/{location}"
-            }
-          }
-        }
-      EOF
+      '{ "_links": { "hello": { "href":"http://www.example.com/hello/{location}" } } }'
     end
 
     def hello_world
-      <<~EOF
-        {
-          "_links": {
-            "goodbye": {
-              "href":"http://www.example.com/hello/world/goodbye{?message}"
-            }
-          }
-        }
-      EOF
-    end
-
-    def hello_universe
-      <<~EOF
-        {
-          "_links": {
-            "goodbye": {
-              "href":"http://www.example.com/hello/universe/goodbye{?message}"
-            }
-          }
-        }
-      EOF
+      '{ "_links": { "goodbye": { "href":"http://www.example.com/hello/world/goodbye{?message}" } } }'
     end
 
     def setup
       Excon.defaults[:mock] = true
+      Excon.defaults[:middlewares].push(Excon::HyperMedia::Middleware)
 
-      Excon.stub({ method: :get, path: '/api' }, body: entrypoint, status: 200)
-      Excon.stub({ method: :get, path: '/hello/world' }, body: hello_world, status: 200)
-      Excon.stub({ method: :get, path: '/hello/world/goodbye', query: nil }, body: 'bye!', status: 200)
-      Excon.stub({ method: :get, path: '/hello/world/goodbye', query: 'message=farewell' }, body: 'farewell', status: 200)
-      Excon.stub({ method: :get, path: '/hello/universe' }, body: hello_universe, status: 200)
+      response = { headers: { 'Content-Type' => 'application/hal+json' } }
+      Excon.stub({ method: :get, path: '/api' }, response.merge(body: entrypoint))
+      Excon.stub({ method: :get, path: '/hello/world' }, response.merge(body: hello_world))
+      Excon.stub({ method: :get, path: '/hello/world/goodbye', query: nil }, response.merge(body: 'bye!'))
+      Excon.stub({ method: :get, path: '/hello/world/goodbye', query: 'message=farewell' }, response.merge(body: 'farewell'))
     end
 
-    def test_hypermedia_request
-      conn = Excon.new('http://www.example.com/api', hypermedia: true)
-      conn2 = conn.hello(expand: { location: 'world' })
-      conn3 = conn.hello(expand: { location: 'universe' })
-
-      assert_equal '/hello/world', conn2.data[:path]
-      assert conn2.get.body.include?('http://www.example.com/hello/world/goodbye{?message}')
-
-      assert_equal '/hello/universe', conn3.data[:path]
-      assert conn3.get.body.include?('http://www.example.com/hello/universe/goodbye{?message}')
+    def client
+      Excon.get('http://www.example.com/api')
     end
 
-    def test_nested_hypermedia_request
-      conn = Excon.new('http://www.example.com/api', hypermedia: true)
-      conn2 = conn.hello(expand: { location: 'world' }).goodbye
-      conn3 = conn.hello(expand: { location: 'world' }).goodbye(expand: { message: 'farewell' })
+    def test_request
+      connection = client.hello(expand: { location: 'world' })
+      response   = connection.get
 
-      assert_equal '/hello/world/goodbye', conn2.data[:path]
-      assert_nil conn2.data[:query]
-      assert_equal 'bye!', conn2.get.body
+      assert_equal Excon::Connection, connection.class
+      assert_equal '/hello/world', connection.data[:path]
+      assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
+    end
 
-      assert_equal '/hello/world/goodbye', conn3.data[:path]
-      assert_equal 'message=farewell', conn3.data[:query]
-      assert_equal 'farewell', conn3.get.body
+    def test_nested_request
+      hello      = client.hello(expand: { location: 'world' })
+      connection = hello.get.goodbye
+      response   = connection.get
+
+      assert_equal Excon::Connection, connection.class
+      assert_equal '/hello/world/goodbye', connection.data[:path]
+      assert_equal 'bye!', response.body
+    end
+
+    def test_nested_query_parameters
+      hello      = client.hello(expand: { location: 'world' })
+      connection = hello.get.goodbye(expand: { message: 'farewell' })
+      response   = connection.get
+
+      assert_equal Excon::Connection, connection.class
+      assert_equal '/hello/world/goodbye', connection.data[:path]
+      assert_equal 'message=farewell', connection.data[:query]
+      assert_equal 'farewell', response.body
     end
 
     def teardown

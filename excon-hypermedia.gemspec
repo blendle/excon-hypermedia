@@ -6,7 +6,7 @@ require 'excon/hypermedia/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'excon-hypermedia'
-  spec.version       = Excon::Hypermedia::VERSION
+  spec.version       = Excon::HyperMedia::VERSION
   spec.authors       = %w(Jean Mertz)
   spec.email         = %w(jean@mertz.fm)
 
