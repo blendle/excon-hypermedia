@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Excon.defaults[:middlewares].unshift(Excon::Addressable::Middleware)
+
 module Excon
   module HyperMedia
     # Middleware
