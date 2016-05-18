@@ -1,4 +1,4 @@
-# Excon::Hypermedia
+# Excon::Hypermedia [![wercker status](https://app.wercker.com/status/f3fd6cf2045566072ef26354d5a73e9f/s/master "wercker status")](https://app.wercker.com/project/bykey/f3fd6cf2045566072ef26354d5a73e9f)
 
 Teaches [Excon][] how to talk to [HyperMedia APIs][hypermedia].
 
