@@ -30,19 +30,20 @@ relations. It returns raw response bodies in string format.
 
 This gem adds a thin layer on top of [Excon][excon] to make it talk with an
 HyperMedia-enabled API. To let Excon know the connection supports HyperMedia,
-simply add the `hypermedia: true` option.
+simply enable the correct middleware (either globally, or per-connection):
 
 ```ruby
-conn = Excon.new('http://www.example.com/api.json', hypermedia: true)
-conn.class # => Excon::Connection
+Excon.defaults[:middlewares].push(Excon::HyperMedia::Middleware)
+
+api = Excon.get('http://www.example.com/api.json')
+api.class # => Excon::Response
 ```
 
-From that point on, you can use this single connection to make all requests. The
-`hypermedia` option will be passed on to all subsequent connection objects, as
-long as you keep chaining the requests from the original top-level connection.
+Using the `HyperMedia` middleware, the `Excon::Response` object now knows how
+to handle the HyperMedia aspect of the API:
 
 ```ruby
-product = conn.product(expand: { uid: 'hello' })
+product = api.product(expand: { uid: 'hello' })
 product.class # => Excon::Connection
 
 response = product.get
@@ -53,16 +54,9 @@ response.body.class # => String
 As seen above, you can expand URI Template variables using the `expand` option,
 provided by the [`excon-addressable` library][excon-addressable].
 
-You can mark any connection object as hypermedia-aware – not just the top-level
-entrypoint – by passing in the `hypermedia: true` option:
-
-```ruby
-user = Excon.new('http://www.example.com/users/jeanmertz', hypermedia: true)
-user.orders.class # => Excon::Connection
-```
-
-Since each new resource is simply an `Excon::Connection` object, all
-[Excon-provided options][options] are available as well:
+Since each new resource is simply an `Excon::Response` object, accessed through
+the default `Excon::Connection` object, all [Excon-provided options][options]
+are available as well:
 
 ```ruby
 product.get(idempotent: true, retry_limit: 6)
@@ -74,10 +68,8 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 ## TODO
 
-* use Excon's Middleware system
 * make it easy to access attributes in response objects
 * properly handle curied-links and/or non-valid Ruby method name links
-* work correctly with Excon.get/post/delete shortcut methods
 
 [excon]: https://github.com/excon/excon
 [hypermedia]: https://en.wikipedia.org/wiki/HATEOAS
