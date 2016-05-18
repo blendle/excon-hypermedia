@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 require_relative '../test_helper'
 
@@ -43,6 +44,12 @@ module Excon
 
     def test_request
       response = client.hello(expand: { location: 'world' }).get
+
+      assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
+    end
+
+    def test_request_using_link
+      response = client.rel('hello', expand: { location: 'world' }).get
 
       assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
     end

@@ -73,6 +73,19 @@ You can also access a link directly, using its name:
 api.link('product').href # => 'https://www.example.org/product/{uid}'
 ```
 
+If you want to access a relation through its link, but can't use the implicit
+naming, you can use the `rel` method:
+
+```ruby
+api.links.last.name # => 'customer-orders'
+
+# won't work, due to invalid ruby method name:
+api.customer-orders(expand: { sort: 'desc' }) # => NoMethodError: undefined method `customer' 
+
+# works
+api.rel('customer-orders', expand: { sort: 'desc' })
+```
+
 ### Attributes
 
 Attributes are available through the `attributes` method:
@@ -85,10 +98,6 @@ product.attributes.uid  # => 'bicycle'
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-## TODO
-
-* properly handle curied-links and/or non-valid Ruby method name links
 
 [excon]: https://github.com/excon/excon
 [hypermedia]: https://en.wikipedia.org/wiki/HATEOAS

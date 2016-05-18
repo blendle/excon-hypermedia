@@ -21,7 +21,9 @@ module Excon
       def handle(method_name, *params)
         return false unless enabled?
 
-        if resource.type?(method_name) == :link
+        if method_name == :rel
+          handle_link(params.shift, params)
+        elsif resource.type?(method_name) == :link
           handle_link(method_name, params)
         elsif resource.respond_to?(method_name, false)
           resource.send(method_name, *params)
