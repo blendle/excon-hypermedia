@@ -28,15 +28,7 @@ module Excon
         when :attribute then return handle_attribute(method_name)
         end
 
-        respond_to?(method_name) ? send(method_name) : false
-      end
-
-      def links
-        resource.links
-      end
-
-      def attributes
-        resource.attributes
+        resource.respond_to?(method_name) ? resource.send(method_name, *params) : false
       end
 
       def resource
@@ -58,7 +50,7 @@ module Excon
       end
 
       def handle_attribute(name)
-        attributes[name.to_s]
+        resource.attributes[name.to_s]
       end
     end
   end

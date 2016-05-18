@@ -80,6 +80,12 @@ module Excon
       assert_equal response.links.first.name, 'goodbye'
     end
 
+    def test_link
+      response = client.hello(expand: { location: 'world' }).get
+
+      assert_equal response.link('goodbye').name, 'goodbye'
+    end
+
     def test_attributes
       response = client.hello(expand: { location: 'world' }).get
 

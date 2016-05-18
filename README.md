@@ -72,6 +72,12 @@ api.links.first.name  # => 'product'
 api.links.first.href  # => 'http://www.example.com/product/{uid}'
 ```
 
+You can also access a link directly, using its name:
+
+```ruby
+api.link('product').href # => 'http://www.example.com/product/{uid}'
+```
+
 ### Attributes
 
 Attributes are available through the `attributes` method:
