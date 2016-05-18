@@ -54,7 +54,7 @@ module Excon
       private
 
       def handle_link(name, params)
-        Excon.new(resource.link(name).uri, params.first.to_h.merge(hypermedia: true))
+        Excon.new(resource.link(name).href, params.first.to_h.merge(hypermedia: true))
       end
 
       def handle_attribute(name)
