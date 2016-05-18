@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/AbcSize, Metrics/LineLength
+# rubocop:disable Metrics/LineLength
 require_relative '../test_helper'
 
 module Excon
@@ -42,38 +42,27 @@ module Excon
     end
 
     def test_request
-      connection = client.hello(expand: { location: 'world' })
-      response   = connection.get
+      response = client.hello(expand: { location: 'world' }).get
 
-      assert_equal Excon::Connection, connection.class
-      assert_equal '/hello/world', connection.data[:path]
       assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
     end
 
     def test_nested_request
-      hello      = client.hello(expand: { location: 'world' })
-      connection = hello.get.goodbye
-      response   = connection.get
+      hello    = client.hello(expand: { location: 'world' })
+      response = hello.get.goodbye.get
 
-      assert_equal Excon::Connection, connection.class
-      assert_equal '/hello/world/goodbye', connection.data[:path]
       assert_equal 'bye!', response.body
     end
 
     def test_nested_query_parameters
-      hello      = client.hello(expand: { location: 'world' })
-      connection = hello.get.goodbye(expand: { message: 'farewell' })
-      response   = connection.get
+      hello    = client.hello(expand: { location: 'world' })
+      response = hello.get.goodbye(expand: { message: 'farewell' }).get
 
-      assert_equal Excon::Connection, connection.class
-      assert_equal '/hello/world/goodbye', connection.data[:path]
-      assert_equal 'message=farewell', connection.data[:query]
       assert_equal 'farewell', response.body
     end
 
     def test_attribute
-      connection = client.hello(expand: { location: 'world' })
-      response   = connection.get
+      response = client.hello(expand: { location: 'world' }).get
 
       assert_equal response.uid, 'hello'
       assert_equal response.message, 'goodbye!'
