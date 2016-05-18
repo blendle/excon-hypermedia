@@ -85,6 +85,12 @@ module Excon
       assert_equal response.links.first.name, 'goodbye'
     end
 
+    def test_attributes
+      response = client.hello(expand: { location: 'world' }).get
+
+      assert_equal response.attributes.uid, 'hello'
+    end
+
     def teardown
       Excon.stubs.clear
     end

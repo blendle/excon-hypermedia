@@ -35,6 +35,10 @@ module Excon
         resource.links
       end
 
+      def attributes
+        resource.attributes
+      end
+
       def resource
         @resource ||= Resource.new(response.body)
       end
@@ -54,7 +58,7 @@ module Excon
       end
 
       def handle_attribute(name)
-        resource.attributes[name.to_s]
+        attributes[name.to_s]
       end
     end
   end

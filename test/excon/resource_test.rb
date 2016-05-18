@@ -38,10 +38,10 @@ module Excon
     end
 
     def test_attributes
-      assert resource.attributes.key?('uid')
-      assert resource.attributes.key?('hello')
+      assert_equal resource.attributes.uid, 'universe'
+      assert_equal resource.attributes.hello, 'world'
 
-      refute resource.attributes.key?('_links')
+      refute resource.attributes.respond_to?('_links')
     end
   end
 end

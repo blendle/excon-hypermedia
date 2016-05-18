@@ -25,14 +25,16 @@ module Excon
       end
 
       def attributes
-        data.reject do |k, _|
+        attributes = data.reject do |k, _|
           k == '_links'
         end
+
+        Struct.new(*attributes.keys.map(&:to_sym)).new(*attributes.values)
       end
 
       def type?(name)
         return :link if link(name).valid?
-        return :attribute if attributes.keys.include?(name.to_s)
+        return :attribute if attributes.respond_to?(name.to_s)
 
         :unknown
       end
