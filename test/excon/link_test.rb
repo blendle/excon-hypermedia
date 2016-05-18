@@ -25,16 +25,12 @@ module Excon
       JSON.parse(body)
     end
 
-    def resource
-      @resource ||= Excon::HyperMedia::Resource.new(body)
-    end
-
     def link
-      @link ||= Excon::HyperMedia::Link.new(resource: resource, name: 'hello')
+      @link ||= Excon::HyperMedia::Link.new(name: 'hello', hash: data)
     end
 
     def invalid_link
-      @invalid_link ||= Excon::HyperMedia::Link.new(resource: resource, name: 'goodbye')
+      @invalid_link ||= Excon::HyperMedia::Link.new(name: 'goodbye', hash: data)
     end
 
     def test_link

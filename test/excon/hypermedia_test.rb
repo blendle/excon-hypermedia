@@ -79,6 +79,12 @@ module Excon
       assert_equal response.message, 'goodbye!'
     end
 
+    def test_links
+      response = client.hello(expand: { location: 'world' }).get
+
+      assert_equal response.links.first.name, 'goodbye'
+    end
+
     def teardown
       Excon.stubs.clear
     end

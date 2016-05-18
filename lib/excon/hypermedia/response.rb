@@ -24,10 +24,15 @@ module Excon
         return false if disabled?
 
         case resource.type?(method_name)
-        when :link      then handle_link(method_name, params)
-        when :attribute then handle_attribute(method_name)
-        else false
+        when :link      then return handle_link(method_name, params)
+        when :attribute then return handle_attribute(method_name)
         end
+
+        respond_to?(method_name) ? send(method_name) : false
+      end
+
+      def links
+        resource.links
       end
 
       def resource

@@ -17,11 +17,11 @@ module Excon
       end
 
       def links
-        data.fetch('_links', {})
+        data.fetch('_links', {}).keys.map { |name| link(name) }
       end
 
       def link(link_name)
-        Link.new(resource: self, name: link_name)
+        Link.new(name: link_name, hash: data)
       end
 
       def attributes

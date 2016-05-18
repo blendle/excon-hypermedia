@@ -34,7 +34,7 @@ module Excon
     end
 
     def test_links
-      assert_equal data['_links'], resource.links
+      assert_equal data['_links']['hello']['href'], resource.links.first.href
     end
 
     def test_attributes

@@ -7,11 +7,11 @@ module Excon
     # This HyperMedia::Link object encapsulates a link pointing to a resource.
     #
     class Link
-      attr_reader :resource, :name
+      attr_reader :name
 
-      def initialize(resource:, name:)
-        @resource = resource
-        @name     = name
+      def initialize(name:, hash:)
+        @hash = hash
+        @name = name
       end
 
       def valid?
@@ -33,7 +33,7 @@ module Excon
       private
 
       def link_data
-        resource.links.fetch(name.to_s, {})
+        @hash.dig('_links', name.to_s) || {}
       end
     end
   end
