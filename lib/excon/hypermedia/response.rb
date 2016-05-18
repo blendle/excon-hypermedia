@@ -1,6 +1,6 @@
 # frozen_string_literal: true
+
 require 'excon/hypermedia/ext/response'
-require 'json'
 
 module Excon
   module HyperMedia
@@ -21,9 +21,13 @@ module Excon
       # Correctly handle the hypermedia request.
       #
       def handle(method_name, *params)
-        return false if disabled? || !valid_response?(method_name)
+        return false if disabled? || resource.link(method_name).invalid?
 
-        Excon.new(uri(method_name), params.first.to_h.merge(hypermedia: true))
+        Excon.new(resource.link(method_name).uri, params.first.to_h.merge(hypermedia: true))
+      end
+
+      def resource
+        @resource ||= Resource.new(response.body)
       end
 
       def enabled?
@@ -32,24 +36,6 @@ module Excon
 
       def disabled?
         !enabled?
-      end
-
-      def valid_response?(resource)
-        !resource_link(resource).nil?
-      end
-
-      def resource_link(resource)
-        data.dig('_links', resource.to_s, 'href')
-      end
-
-      def uri(resource)
-        ::Addressable::URI.parse(resource_link(resource))
-      end
-
-      def data
-        @data ||= JSON.parse(response.body)
-      rescue JSON::ParserError
-        {}
       end
     end
   end
