@@ -61,6 +61,12 @@ module Excon
       assert_equal 'farewell', response.body
     end
 
+    def test_expand_in_get
+      response = client.hello.get(expand: { location: 'world' })
+
+      assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
+    end
+
     def test_attribute
       response = client.hello(expand: { location: 'world' }).get
 
