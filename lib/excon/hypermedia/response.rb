@@ -21,9 +21,13 @@ module Excon
       # Correctly handle the hypermedia request.
       #
       def handle(method_name, *params)
-        return false if disabled? || resource.link(method_name).invalid?
+        return false if disabled?
 
-        Excon.new(resource.link(method_name).uri, params.first.to_h.merge(hypermedia: true))
+        case resource.type?(method_name)
+        when :link      then handle_link(method_name, params)
+        when :attribute then handle_attribute(method_name)
+        else false
+        end
       end
 
       def resource
@@ -36,6 +40,16 @@ module Excon
 
       def disabled?
         !enabled?
+      end
+
+      private
+
+      def handle_link(name, params)
+        Excon.new(resource.link(name).uri, params.first.to_h.merge(hypermedia: true))
+      end
+
+      def handle_attribute(name)
+        resource.attributes[name.to_s]
       end
     end
   end

@@ -12,8 +12,18 @@ module Excon
       '{ "_links": { "hello": { "href":"http://www.example.com/hello/{location}" } } }'
     end
 
-    def hello_world
-      '{ "_links": { "goodbye": { "href":"http://www.example.com/hello/world/goodbye{?message}" } } }'
+    def hello_world # rubocop:disable Metrics/MethodLength
+      <<~EOF
+        {
+          "_links": {
+            "goodbye": {
+              "href":"http://www.example.com/hello/world/goodbye{?message}"
+            }
+          },
+          "uid": "hello",
+          "message": "goodbye!"
+        }
+        EOF
     end
 
     def setup
@@ -59,6 +69,14 @@ module Excon
       assert_equal '/hello/world/goodbye', connection.data[:path]
       assert_equal 'message=farewell', connection.data[:query]
       assert_equal 'farewell', response.body
+    end
+
+    def test_attribute
+      connection = client.hello(expand: { location: 'world' })
+      response   = connection.get
+
+      assert_equal response.uid, 'hello'
+      assert_equal response.message, 'goodbye!'
     end
 
     def teardown

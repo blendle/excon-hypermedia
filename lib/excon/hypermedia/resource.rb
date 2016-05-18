@@ -30,6 +30,13 @@ module Excon
         end
       end
 
+      def type?(name)
+        return :link if link(name).valid?
+        return :attribute if attributes.keys.include?(name.to_s)
+
+        :unknown
+      end
+
       def data
         @data ||= JSON.parse(@body)
       rescue JSON::ParserError
