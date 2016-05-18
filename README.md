@@ -26,7 +26,7 @@ gem install excon-hypermedia
 
 **NOTE**: This library is in very early development. Right now, it only talks
 the `HAL/JSON` protocol, and it only knows how to follow (non-curie) link
-relations. It returns raw response bodies in string format.
+relations.
 
 This gem adds a thin layer on top of [Excon][excon] to make it talk with an
 HyperMedia-enabled API. To let Excon know the connection supports HyperMedia,
@@ -43,7 +43,7 @@ Using the `HyperMedia` middleware, the `Excon::Response` object now knows how
 to handle the HyperMedia aspect of the API:
 
 ```ruby
-product = api.product(expand: { uid: 'hello' })
+product = api.product(expand: { uid: 'bicycle' })
 product.class # => Excon::Connection
 
 response = product.get
@@ -60,6 +60,40 @@ are available as well:
 
 ```ruby
 product.get(idempotent: true, retry_limit: 6)
+```
+
+### Links
+
+You can access all links in a resource using the `links` method:
+
+```ruby
+api.links.first.class # => Excon::HyperMedia::Link
+api.links.first.name  # => 'product'
+api.links.first.href  # => 'http://www.example.com/product/{uid}'
+```
+
+### Attributes
+
+Attributes are available through the `attributes` method:
+
+```ruby
+product.attributes.to_h # => { uid: 'bicycle', stock: 5 }
+product.attributes.uid  # => 'bycycle'
+```
+
+Attributes can be accessed directly on the `product` object (which itself is an
+`Excon::Response` object), but keep in mind that this might conflict with
+existing methods on the response object, resulting in unexpected return values,
+so use this sparsingly:
+
+```ruby
+product.class  # => Excon::Response
+
+# resource attribute:
+product.stock  # => 5
+
+# not an attribute, but the `Excon::Response#status` value:
+product.status # => 200
 ```
 
 ## License
