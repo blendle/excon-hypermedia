@@ -67,13 +67,6 @@ module Excon
       assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
     end
 
-    def test_attribute
-      response = client.hello(expand: { location: 'world' }).get
-
-      assert_equal response.uid, 'hello'
-      assert_equal response.message, 'goodbye!'
-    end
-
     def test_links
       response = client.hello(expand: { location: 'world' }).get
 
@@ -89,6 +82,7 @@ module Excon
     def test_attributes
       response = client.hello(expand: { location: 'world' }).get
 
+      assert_equal response.attributes.to_h, uid: 'hello', message: 'goodbye!'
       assert_equal response.attributes.uid, 'hello'
     end
 

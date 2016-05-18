@@ -82,24 +82,6 @@ product.attributes.to_h # => { uid: 'bicycle', stock: 5 }
 product.attributes.uid  # => 'bicycle'
 ```
 
-Attributes can be accessed directly on the `Excon::Response` object, but keep
-in mind that this might conflict with existing methods on the response object,
-resulting in unexpected return values, so use this sparsely:
-
-```ruby
-product.class # => Excon::Response
-
-# resource attribute:
-product.stock # => 5
-
-# not an attribute, but the `Excon::Response#status` value:
-product.status # => 200
-
-# better separation of concern:
-product.attributes.stock # => 5
-product.status # => 200
-```
-
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).

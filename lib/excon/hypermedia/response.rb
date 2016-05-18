@@ -10,8 +10,6 @@ module Excon
     # requests and attribute values.
     #
     class Response
-      attr_reader :response
-
       def initialize(response)
         @response = response
       end
@@ -21,15 +19,20 @@ module Excon
       # Correctly handle the hypermedia request.
       #
       def handle(method_name, *params)
-        return false if disabled?
+        return false unless enabled?
 
-        case resource.type?(method_name)
-        when :link      then return handle_link(method_name, params)
-        when :attribute then return handle_attribute(method_name)
+        if resource.type?(method_name) == :link
+          handle_link(method_name, params)
+        elsif resource.respond_to?(method_name, false)
+          resource.send(method_name, *params)
+        else
+          false
         end
-
-        resource.respond_to?(method_name) ? resource.send(method_name, *params) : false
       end
+
+      private
+
+      attr_reader :response
 
       def resource
         @resource ||= Resource.new(response.body)
@@ -39,18 +42,8 @@ module Excon
         response.data[:hypermedia] == true
       end
 
-      def disabled?
-        !enabled?
-      end
-
-      private
-
       def handle_link(name, params)
         Excon.new(resource.link(name).href, params.first.to_h.merge(hypermedia: true))
-      end
-
-      def handle_attribute(name)
-        resource.attributes[name.to_s]
       end
     end
   end
