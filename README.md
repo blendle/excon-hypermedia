@@ -24,18 +24,13 @@ gem install excon-hypermedia
 
 ## Usage
 
-**NOTE**: This library is in very early development. Right now, it only talks
-the `HAL/JSON` protocol, and it only knows how to follow (non-curie) link
-relations.
-
-This gem adds a thin layer on top of [Excon][excon] to make it talk with an
-HyperMedia-enabled API. To let Excon know the connection supports HyperMedia,
-simply enable the correct middleware (either globally, or per-connection):
+To let Excon know the API supports HyperMedia, simply enable the correct
+middleware (either globally, or per-connection):
 
 ```ruby
 Excon.defaults[:middlewares].push(Excon::HyperMedia::Middleware)
 
-api = Excon.get('http://www.example.com/api.json')
+api = Excon.get('https://www.example.org/api.json')
 api.class # => Excon::Response
 ```
 
@@ -69,13 +64,13 @@ You can access all links in a resource using the `links` method:
 ```ruby
 api.links.first.class # => Excon::HyperMedia::Link
 api.links.first.name  # => 'product'
-api.links.first.href  # => 'http://www.example.com/product/{uid}'
+api.links.first.href  # => 'https://www.example.org/product/{uid}'
 ```
 
 You can also access a link directly, using its name:
 
 ```ruby
-api.link('product').href # => 'http://www.example.com/product/{uid}'
+api.link('product').href # => 'https://www.example.org/product/{uid}'
 ```
 
 ### Attributes
@@ -84,21 +79,24 @@ Attributes are available through the `attributes` method:
 
 ```ruby
 product.attributes.to_h # => { uid: 'bicycle', stock: 5 }
-product.attributes.uid  # => 'bycycle'
+product.attributes.uid  # => 'bicycle'
 ```
 
-Attributes can be accessed directly on the `product` object (which itself is an
-`Excon::Response` object), but keep in mind that this might conflict with
-existing methods on the response object, resulting in unexpected return values,
-so use this sparsingly:
+Attributes can be accessed directly on the `Excon::Response` object, but keep
+in mind that this might conflict with existing methods on the response object,
+resulting in unexpected return values, so use this sparsely:
 
 ```ruby
-product.class  # => Excon::Response
+product.class # => Excon::Response
 
 # resource attribute:
-product.stock  # => 5
+product.stock # => 5
 
 # not an attribute, but the `Excon::Response#status` value:
+product.status # => 200
+
+# better separation of concern:
+product.attributes.stock # => 5
 product.status # => 200
 ```
 
@@ -108,7 +106,6 @@ The gem is available as open source under the terms of the [MIT License](http://
 
 ## TODO
 
-* make it easy to access attributes in response objects
 * properly handle curied-links and/or non-valid Ruby method name links
 
 [excon]: https://github.com/excon/excon
