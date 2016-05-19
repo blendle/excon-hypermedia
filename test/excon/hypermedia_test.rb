@@ -43,7 +43,7 @@ module Excon
     end
 
     def test_request
-      response = client.hello(expand: { location: 'world' }).get
+      response = client.rel('hello', expand: { location: 'world' }).get
 
       assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
     end
@@ -55,42 +55,42 @@ module Excon
     end
 
     def test_nested_request
-      hello    = client.hello(expand: { location: 'world' })
-      response = hello.get.goodbye.get
+      hello    = client.rel('hello', expand: { location: 'world' })
+      response = hello.get.rel('goodbye').get
 
       assert_equal 'bye!', response.body
     end
 
     def test_nested_query_parameters
-      hello    = client.hello(expand: { location: 'world' })
-      response = hello.get.goodbye(expand: { message: 'farewell' }).get
+      hello    = client.rel('hello', expand: { location: 'world' })
+      response = hello.get.rel('goodbye', expand: { message: 'farewell' }).get
 
       assert_equal 'farewell', response.body
     end
 
     def test_expand_in_get
-      response = client.hello.get(expand: { location: 'world' })
+      response = client.rel('hello').get(expand: { location: 'world' })
 
       assert response.body.include?('http://www.example.com/hello/world/goodbye{?message}')
     end
 
     def test_links
-      response = client.hello(expand: { location: 'world' }).get
+      response = client.rel('hello', expand: { location: 'world' }).get
 
       assert_equal response.links.first.name, 'goodbye'
     end
 
     def test_link
-      response = client.hello(expand: { location: 'world' }).get
+      response = client.rel('hello', expand: { location: 'world' }).get
 
-      assert_equal response.link('goodbye').name, 'goodbye'
+      assert_equal response.resource.link('goodbye').name, 'goodbye'
     end
 
     def test_attributes
-      response = client.hello(expand: { location: 'world' }).get
+      resource = client.rel('hello', expand: { location: 'world' }).get.resource
 
-      assert_equal response.attributes.to_h, uid: 'hello', message: 'goodbye!'
-      assert_equal response.attributes.uid, 'hello'
+      assert_equal resource.attributes.to_h, uid: 'hello', message: 'goodbye!'
+      assert_equal resource.attributes.uid, 'hello'
     end
 
     def teardown

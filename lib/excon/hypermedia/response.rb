@@ -21,14 +21,12 @@ module Excon
       def handle(method_name, *params)
         return false unless enabled?
 
-        if method_name == :rel
-          handle_link(params.shift, params)
-        elsif resource.type?(method_name) == :link
-          handle_link(method_name, params)
-        elsif resource.respond_to?(method_name, false)
-          resource.send(method_name, *params)
-        else
-          false
+        case method_name
+        when :resource then resource
+        when :links    then resource.links
+        when :embeds   then resource.embeds
+        when :rel      then rel(params.shift, params)
+        else false
         end
       end
 
@@ -44,7 +42,7 @@ module Excon
         response.data[:hypermedia] == true
       end
 
-      def handle_link(name, params)
+      def rel(name, params)
         Excon.new(resource.link(name).href, params.first.to_h.merge(hypermedia: true))
       end
     end

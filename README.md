@@ -38,7 +38,7 @@ Using the `HyperMedia` middleware, the `Excon::Response` object now knows how
 to handle the HyperMedia aspect of the API:
 
 ```ruby
-product = api.product(expand: { uid: 'bicycle' })
+product = api.rel('product', expand: { uid: 'bicycle' })
 product.class # => Excon::Connection
 
 response = product.get
@@ -67,32 +67,20 @@ api.links.first.name  # => 'product'
 api.links.first.href  # => 'https://www.example.org/product/{uid}'
 ```
 
-You can also access a link directly, using its name:
+You can also access a resource link directly, using its name:
 
 ```ruby
-api.link('product').href # => 'https://www.example.org/product/{uid}'
-```
-
-If you want to access a relation through its link, but can't use the implicit
-naming, you can use the `rel` method:
-
-```ruby
-api.links.last.name # => 'customer-orders'
-
-# won't work, due to invalid ruby method name:
-api.customer-orders(expand: { sort: 'desc' }) # => NoMethodError: undefined method `customer' 
-
-# works
-api.rel('customer-orders', expand: { sort: 'desc' })
+api.resource.link('product').href # => 'https://www.example.org/product/{uid}'
 ```
 
 ### Attributes
 
-Attributes are available through the `attributes` method:
+Attributes are available through the `resource`'s `attributes` method:
 
 ```ruby
-product.attributes.to_h # => { uid: 'bicycle', stock: 5 }
-product.attributes.uid  # => 'bicycle'
+product.resource.attributes.to_h # => { uid: 'bicycle', stock: 5 }
+product.resource.attributes.uid  # => 'bicycle'
+```
 ```
 
 ## License
