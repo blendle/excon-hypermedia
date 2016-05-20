@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+Excon.defaults[:middlewares].delete(Excon::Addressable::Middleware)
 Excon.defaults[:middlewares].unshift(Excon::Addressable::Middleware)
 
 module Excon
