@@ -23,8 +23,6 @@ module Excon
 
         case method_name
         when :resource then resource
-        when :links    then resource.links
-        when :embeds   then resource.embeds
         when :rel      then rel(params.shift, params)
         else false
         end
@@ -35,7 +33,15 @@ module Excon
       attr_reader :response
 
       def resource
-        @resource ||= Resource.new(response.body)
+        @resource ||= ResourceObject.new(body_to_hash)
+      end
+
+      def body_to_hash
+        content_type.include?('application/hal+json') ? JSON.parse(response.body) : {}
+      end
+
+      def content_type
+        response.headers['Content-Type'].to_s
       end
 
       def enabled?
@@ -43,7 +49,14 @@ module Excon
       end
 
       def rel(name, params)
-        Excon.new(resource.link(name).href, params.first.to_h.merge(hypermedia: true))
+        link    = resource._links.send(name)
+        options = params.first.to_h.merge(hypermedia: true)
+
+        if link.respond_to?(:to_ary)
+          link.map { |l| Excon.new(l.href, options) }
+        else
+          Excon.new(link.href, options)
+        end
       end
     end
   end
