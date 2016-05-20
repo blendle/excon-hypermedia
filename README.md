@@ -165,15 +165,15 @@ Using `rel`, returns an `Excon::Connection` object, the same as if you where to
 call `Excon.new`:
 
 ```ruby
-rel = api.rel('self')
-rel.class # => Excon::Connection
+relation = api.rel('self')
+relation.class # => Excon::Connection
 ```
 
 Since the returned object is of type `Excon::Connection`, all
 [Excon-provided options][options] are available as well:
 
 ```ruby
-rel.get(idempotent: true, retry_limit: 6)
+relation.get(idempotent: true, retry_limit: 6)
 ```
 
 Once you call `get` (or `post`, or any other valid Excon request method), you
@@ -181,7 +181,7 @@ are back where you started, with a new `Excon::Response` object, imbued with
 HyperMedia powers:
 
 ```ruby
-api.resource._links.keys # => ['self', 'product']
+relation.resource._links.keys # => ['self', 'product']
 ```
 
 In this case, we ended up back with the same type of object as before. To go
