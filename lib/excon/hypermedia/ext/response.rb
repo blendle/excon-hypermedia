@@ -9,6 +9,8 @@ module Excon
       # on top.
       #
       module Response
+        private
+
         def method_missing(method_name, *params)
           hypermedia_response.handle(method_name, *params) || super
         end
