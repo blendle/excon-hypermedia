@@ -2,6 +2,16 @@
 
 Teaches [Excon][] how to talk to [HyperMedia APIs][hypermedia].
 
+* [Installation](#installation)
+* [Quick Start](#quick-start)
+* [Usage](#usage)
+  * [resources](#resources)
+  * [links](#links)
+  * [relations](#relations)
+  * [properties](#properties)
+  * [embedded](#embedded)
+* [License](#license)
+
 ## Installation
 
 Add this line to your application's Gemfile:
