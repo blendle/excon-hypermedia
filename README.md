@@ -159,13 +159,13 @@ Links are the primary way to traverse between relations. This is what makes a
 HyperMedia-based API "self-discoverable".
 
 To go from one resource, to the next, you use the `rel` (short for relation)
-method. This method is available on the `Excon::Response` instance.
+method. This method is available on any `LinkObject` instance.
 
 Using `rel`, returns an `Excon::Connection` object, the same as if you where to
 call `Excon.new`:
 
 ```ruby
-relation = api.rel('self')
+relation = api.resource._links.self.rel
 relation.class # => Excon::Connection
 ```
 
@@ -174,6 +174,12 @@ Since the returned object is of type `Excon::Connection`, all
 
 ```ruby
 relation.get(idempotent: true, retry_limit: 6)
+```
+
+`Excon::Response` also has a convenient delegation to `LinkObject#rel`:
+
+```ruby
+relation = api.rel('self').get
 ```
 
 Once you call `get` (or `post`, or any other valid Excon request method), you

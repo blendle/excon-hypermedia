@@ -20,6 +20,12 @@ module Excon
       assert response.body.include?('https://www.example.org/product/bicycle')
     end
 
+    def test_request_using_link_rel
+      response = api.resource._links.product.rel(expand: { uid: 'bicycle' }).get
+
+      assert response.body.include?('https://www.example.org/product/bicycle')
+    end
+
     def test_nested_request
       bicycle  = api.rel('product', expand: { uid: 'bicycle' }).get
       response = bicycle.rel('handlebar').get

@@ -52,11 +52,7 @@ module Excon
         link    = resource._links.send(name)
         options = params.first.to_h.merge(hypermedia: true)
 
-        if link.respond_to?(:to_ary)
-          link.map { |l| Excon.new(l.href, options) }
-        else
-          Excon.new(link.href, options)
-        end
+        link.respond_to?(:to_ary) ? link.map { |l| l.rel(options) } : link.rel(options)
       end
     end
   end

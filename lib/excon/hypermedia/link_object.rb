@@ -135,6 +135,16 @@ module Excon
         ::Addressable::URI.parse(href)
       end
 
+      # rel
+      #
+      # Returns an `Excon::Connection` instance, based on the current link.
+      #
+      # @return [Excon::Connection] Connection object based on current link
+      #
+      def rel(params = {})
+        Excon.new(href, params)
+      end
+
       private def property(value)
         value
       end
