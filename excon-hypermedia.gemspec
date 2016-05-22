@@ -25,5 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'm', '~> 1.5'
 
   spec.add_dependency 'excon', '~> 0.49'
-  spec.add_dependency 'excon-addressable', '~> 0.2'
+  spec.add_dependency 'excon-addressable', '~> 0.3'
 end
