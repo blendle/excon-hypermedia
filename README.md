@@ -10,6 +10,7 @@ Teaches [Excon][] how to talk to [HyperMedia APIs][hypermedia].
   * [relations](#relations)
   * [properties](#properties)
   * [embedded](#embedded)
+  * [Hypertext Cache Pattern](#hypertext-cache-pattern)
   * [shortcuts](#shortcuts)
 * [License](#license)
 
@@ -259,6 +260,34 @@ product.resource._embedded.pump.class # => Excon::HyperMedia::ResourceObject
 product.resource._embedded.pump.weight # => '2kg'
 ```
 
+### Hypertext Cache Pattern
+
+You can leverage embedded resources to dynamically reduce the number of requests
+you have to make to get the desired results, improving the efficiency and
+performance of the application. This technique is called
+"[Hypertext Cache Pattern][hcp]".
+
+When you enable `hcp`, the library detects if a requested resource is already
+embedded, and will use that resource as a mocked response, eliminating any extra
+request to get the resource:
+
+```ruby
+pump = product.rel('pump', hcp: true).get
+
+pump[:hcp] # => true
+pump.remote_ip # => '127.0.0.1'
+pump.resource.weight # => '2kg'
+```
+
+This feature only works if you are sure the embedded resource is equal to the
+resource returned by the link relation. Because of this requirement, the default
+configuration has `hcp` disabled, you can either enable it per request (which
+also enables it for future requests in the chain), or enable it globally:
+
+```ruby
+Excon.defaults[:hcp] = true
+```
+
 ### shortcuts
 
 There are several methods available on the `Excon::Response` object for
@@ -279,3 +308,4 @@ The gem is available as open source under the terms of the [MIT License](http://
 [excon-addressable]: https://github.com/JeanMertz/excon-addressable
 [options]: https://github.com/excon/excon#options
 [_embedded]: https://tools.ietf.org/html/draft-kelly-json-hal-08#section-4.1.2
+[hcp]: https://tools.ietf.org/html/draft-kelly-json-hal-06#section-8.3

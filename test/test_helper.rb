@@ -21,7 +21,8 @@ module Excon
       Excon.stub({ method: :get, path: '/product/bicycle' }, response.merge(body: bicycle_body))
       Excon.stub({ method: :get, path: '/product/bicycle/wheels/front' }, response.merge(body: front_wheel_body))
       Excon.stub({ method: :get, path: '/product/bicycle/wheels/rear' }, response.merge(body: rear_wheel_body))
-      Excon.stub({ method: :get, path: '/product/pump' }, response.merge(body: pump_body))
+      Excon.stub({ path: '/product/pump' }, response.merge(body: pump_body))
+      Excon.stub({ method: :get, path: '/product/pump/parts' }, response.merge(body: parts_body))
       Excon.stub({ method: :get, path: '/product/handlebar' }, response.merge(body: handlebar_body))
       Excon.stub({ method: :get, path: '/api_v2.json' }, body: api_body, headers: { 'Content-Type' => 'application/json' })
     end
@@ -110,11 +111,31 @@ module Excon
           "_links": {
             "self": {
               "href": "https://www.example.org/product/pump"
+            },
+            "parts": {
+              "href": "https://www.example.org/product/pump/parts"
             }
           },
           "weight": "2kg",
           "type": "Floor Pump",
-          "valve-type": "Presta"
+          "valve-type": "Presta",
+          "_embedded": {
+            "parts": #{parts_body}
+          }
+
+        }
+      EOF
+    end
+
+    def parts_body
+      <<-EOF
+        {
+          "_links": {
+            "self": {
+              "href": "https://www.example.org/product/pump/parts"
+            }
+          },
+          "count": 47
         }
       EOF
     end

@@ -58,9 +58,20 @@ module Excon
           raise UnknownRelationError, "unknown relation: #{name}"
         end
 
-        options = params.first.to_h.merge(hypermedia: true)
+        options = rel_params(params.first.to_h)
 
         link.respond_to?(:to_ary) ? link.map { |l| l.rel(options) } : link.rel(options)
+      end
+
+      def rel_params(params)
+        params.merge(
+          hypermedia: true,
+          hcp: (params[:hcp].nil? ? response.data[:hcp] : params[:hcp]),
+          hcp_params: {
+            content_type: response.headers['Content-Type'],
+            embedded: resource._embedded
+          }
+        )
       end
     end
   end
