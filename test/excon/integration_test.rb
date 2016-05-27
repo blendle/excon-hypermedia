@@ -92,6 +92,13 @@ module Excon
       assert_equal data(:front_wheel)['position'], response.resource._embedded.wheels.first.position
     end
 
+    def test_request_with_json_content_type
+      api      = Excon.get('https://www.example.org/api_v2.json', hypermedia: true)
+      response = api.rel('product', expand: { uid: 'bicycle' }).get
+
+      assert response.body.include?('https://www.example.org/product/bicycle')
+    end
+
     def teardown
       Excon.stubs.clear
     end
