@@ -23,6 +23,7 @@ module Excon
       Excon.stub({ method: :get, path: '/product/bicycle/wheels/rear' }, response.merge(body: rear_wheel_body))
       Excon.stub({ method: :get, path: '/product/pump' }, response.merge(body: pump_body))
       Excon.stub({ method: :get, path: '/product/handlebar' }, response.merge(body: handlebar_body))
+      Excon.stub({ method: :get, path: '/api_v2.json' }, body: api_body, headers: { 'Content-Type' => 'application/json' })
     end
 
     def teardown
@@ -92,7 +93,9 @@ module Excon
       <<~EOF
         {
           "_links": {
-            "self": "https://www.example.org/product/handlebar"
+            "self": {
+              "href": "https://www.example.org/product/handlebar"
+            }
           },
           "material": "Carbon fiber",
           "reach": "75mm",
@@ -105,7 +108,9 @@ module Excon
       <<~EOF
         {
           "_links": {
-            "self": "https://www.example.org/product/pump"
+            "self": {
+              "href": "https://www.example.org/product/pump"
+            }
           },
           "weight": "2kg",
           "type": "Floor Pump",

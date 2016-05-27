@@ -37,7 +37,7 @@ module Excon
       end
 
       def body_to_hash
-        content_type.include?('application/hal+json') ? JSON.parse(response.body) : {}
+        (content_type =~ %r{application/(hal\+)?json}).nil? ? {} : JSON.parse(response.body)
       end
 
       def content_type
