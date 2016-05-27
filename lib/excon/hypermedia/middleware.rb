@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'backport_dig' if RUBY_VERSION < '2.3'
+
 Excon.defaults[:middlewares].delete(Excon::Addressable::Middleware)
 Excon.defaults[:middlewares].unshift(Excon::Addressable::Middleware)
 

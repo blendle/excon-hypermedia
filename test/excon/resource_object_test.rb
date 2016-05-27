@@ -10,7 +10,7 @@ module Excon
   #
   class ResourceObjectTest < Minitest::Test
     def body
-      <<~EOF
+      <<-EOF
         {
           "_links": {
             "hello": {

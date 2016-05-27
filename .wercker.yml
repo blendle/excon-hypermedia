@@ -1,5 +1,29 @@
-box: ruby:2.3
-build:
+ruby-latest:
+  box: ruby:latest
+  steps:
+  - bundle-install
+  - script:
+    name: tests
+    code: bundle exec rake
+
+ruby-23:
+  box: ruby:2.3
+  steps:
+  - bundle-install
+  - script:
+    name: tests
+    code: bundle exec rake
+
+ruby-22:
+  box: ruby:2.2
+  steps:
+  - bundle-install
+  - script:
+    name: tests
+    code: bundle exec rake
+
+ruby-21:
+  box: ruby:2.1
   steps:
   - bundle-install
   - script:
