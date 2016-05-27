@@ -48,10 +48,6 @@ module Excon
       assert response.body.include?('https://www.example.org/product/bicycle')
     end
 
-    def test_invalid_relation
-      assert_raises(NoMethodError) { api.rel('invalid') }
-    end
-
     def test_link
       response = api.rel('product', expand: { uid: 'bicycle' }).get
 

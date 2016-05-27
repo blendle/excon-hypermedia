@@ -12,7 +12,7 @@ module Excon
       include Enumerable
 
       def initialize(collection = {})
-        @collection ||= collection
+        @collection ||= collection.to_h
         to_properties
       end
 
@@ -33,6 +33,21 @@ module Excon
       end
 
       private
+
+      # method_missing
+      #
+      # Collections can be accessed using both the "dot notation" and the hash
+      # notation:
+      #
+      #   collection.hello_world
+      #   collection['hello_world']
+      #
+      # The second notation returns `nil` on missing keys, the first should do
+      # as well.
+      #
+      def method_missing(_)
+        nil
+      end
 
       def to_properties
         collection.each do |key, value|

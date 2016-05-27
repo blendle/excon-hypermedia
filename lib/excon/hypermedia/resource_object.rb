@@ -15,14 +15,6 @@ module Excon
 
       def initialize(data)
         @data = data
-
-        _properties.each do |key, value|
-          key = key.downcase
-          next unless /[@$"]/ !~ key.to_sym.inspect
-
-          singleton_class.class_eval { attr_reader key }
-          instance_variable_set("@#{key}", value.respond_to?(:keys) ? Properties.new(value) : value)
-        end
       end
 
       def _properties
@@ -63,6 +55,10 @@ module Excon
 
       def [](key)
         _properties[key]
+      end
+
+      def method_missing(method_name, *_)
+        _properties.send(method_name)
       end
     end
   end

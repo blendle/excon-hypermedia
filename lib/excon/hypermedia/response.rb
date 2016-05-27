@@ -49,7 +49,12 @@ module Excon
       end
 
       def rel(name, params)
-        link    = resource._links.send(name)
+        raise ArgumentError, 'missing relation name' unless name
+
+        unless (link = resource._links[name])
+          raise UnknownRelationError, "unknown relation: #{name}"
+        end
+
         options = params.first.to_h.merge(hypermedia: true)
 
         link.respond_to?(:to_ary) ? link.map { |l| l.rel(options) } : link.rel(options)
