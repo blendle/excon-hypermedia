@@ -10,6 +10,7 @@ Teaches [Excon][] how to talk to [HyperMedia APIs][hypermedia].
   * [relations](#relations)
   * [properties](#properties)
   * [embedded](#embedded)
+  * [shortcuts](#shortcuts)
 * [License](#license)
 
 ## Installation
@@ -254,8 +255,19 @@ For more information on this concept, see the [formal specification][_embedded].
 Embedded resources work the same as the top-level resource:
 
 ```ruby
-product._embedded.pump.class # => Excon::HyperMedia::ResourceObject
-product._embedded.pump.weight # => '2kg'
+product.resource._embedded.pump.class # => Excon::HyperMedia::ResourceObject
+product.resource._embedded.pump.weight # => '2kg'
+```
+
+### shortcuts
+
+There are several methods available on the `Excon::Response` object for
+ease-of-use:
+
+```ruby
+product.links.class # => Excon::HyperMedia::ResourceObject::Links
+product.properties.class # => Excon::HyperMedia::ResourceObject::Properties
+product.embedded.class # => Excon::HyperMedia::ResourceObject::Embedded
 ```
 
 ## License

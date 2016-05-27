@@ -18,12 +18,15 @@ module Excon
       #
       # Correctly handle the hypermedia request.
       #
-      def handle(method_name, *params)
+      def handle(method_name, *params) # rubocop:disable Metrics/CyclomaticComplexity
         return false unless enabled?
 
         case method_name
-        when :resource then resource
-        when :rel      then rel(params.shift, params)
+        when :resource                 then resource
+        when :_links, :links           then resource._links
+        when :_embedded, :embedded     then resource._embedded
+        when :_properties, :properties then resource._properties
+        when :rel                      then rel(params.shift, params)
         else false
         end
       end
