@@ -10,7 +10,9 @@ module Excon
       class Embedded
         include Collection
 
-        private def property(value)
+        private
+
+        def property(value)
           if value.respond_to?(:to_ary)
             value.map { |v| ResourceObject.new(v) }
           else

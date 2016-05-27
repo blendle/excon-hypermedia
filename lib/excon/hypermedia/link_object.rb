@@ -145,7 +145,9 @@ module Excon
         Excon.new(href, params)
       end
 
-      private def property(value)
+      private
+
+      def property(value)
         value
       end
     end

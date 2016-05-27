@@ -10,7 +10,9 @@ module Excon
       class Links
         include Collection
 
-        private def property(value)
+        private
+
+        def property(value)
           value.respond_to?(:to_ary) ? value.map { |v| LinkObject.new(v) } : LinkObject.new(value)
         end
       end
