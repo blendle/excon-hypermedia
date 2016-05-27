@@ -10,7 +10,7 @@ module Excon
   #
   class PropertiesTest < Minitest::Test
     def body
-      <<~EOF
+      <<-EOF
         {
           "size": "49CM",
           "bike-type": "Mountain Bike",

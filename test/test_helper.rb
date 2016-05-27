@@ -37,7 +37,7 @@ module Excon
     end
 
     def api_body
-      <<~EOF
+      <<-EOF
        {
          "_links": {
            "self": {
@@ -53,7 +53,7 @@ module Excon
     end
 
     def bicycle_body
-      <<~EOF
+      <<-EOF
         {
           "_links": {
             "self": {
@@ -90,7 +90,7 @@ module Excon
     end
 
     def handlebar_body
-      <<~EOF
+      <<-EOF
         {
           "_links": {
             "self": {
@@ -105,7 +105,7 @@ module Excon
     end
 
     def pump_body
-      <<~EOF
+      <<-EOF
         {
           "_links": {
             "self": {
@@ -120,7 +120,7 @@ module Excon
     end
 
     def rear_wheel_body
-      <<~EOF
+      <<-EOF
         {
           "_links": {
             "self": {
@@ -134,7 +134,7 @@ module Excon
     end
 
     def front_wheel_body
-      <<~EOF
+      <<-EOF
         {
           "_links": {
             "self": {

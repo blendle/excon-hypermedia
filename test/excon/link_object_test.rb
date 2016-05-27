@@ -18,7 +18,7 @@ module Excon
     end
 
     def full
-      <<~EOF
+      <<-EOF
         {
           "href": "https://www.example.org/goodbye/{receiver}",
           "templated": "true",
