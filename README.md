@@ -290,8 +290,12 @@ Excon.defaults[:hcp] = true
 
 ### shortcuts
 
-There are several methods available on the `Excon::Response` object for
-ease-of-use:
+While the above examples shows the clean separation between the different
+concepts like `response`, `resource`, `links`, `properties` and `emeds`.
+
+Traversing these objects always starts from the response object. To make moving
+around a bit faster, there are several methods available on the
+`Excon::Response` object for ease-of-use:
 
 ```ruby
 product.links.class # => Excon::HyperMedia::ResourceObject::Links
