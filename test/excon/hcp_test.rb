@@ -22,7 +22,7 @@ module Excon
 
     def test_hcp_response_with_missing_embedding
       api      = Excon.get('https://www.example.org/api.json')
-      response = api.rel('product', expand: { uid: 'bicycle' }, rel: true).get
+      response = api.rel('product', expand: { uid: 'bicycle' }, hcp: true).get
 
       assert_equal nil, response[:hcp]
     end
