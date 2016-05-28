@@ -15,10 +15,10 @@ module Excon
         def request_call(datum)
           @datum = datum
 
-          return super unless datum[:hcp] == true && datum[:method] == :get && find_embedded
+          return super unless datum[:hcp] == true && datum[:method] == :get && resource
 
           datum[:response] = {
-            body:      @embedded.to_json,
+            body:      resource.to_json,
             hcp:       true,
             headers:   content_type_header,
             remote_ip: '127.0.0.1',
@@ -30,22 +30,16 @@ module Excon
 
         private
 
-        def find_embedded
-          datum.dig(:hcp_params, :embedded).to_h.each do |_, object|
-            break if (@embedded = object_to_embedded(object))
-          end
-
-          @embedded
+        def resource
+          @resource ||= embedded.find { |name, _| name == relation_name }.to_a[1]
         end
 
-        def object_to_embedded(object)
-          uri = ::Addressable::URI.new(datum.tap { |h| h.delete(:port) })
+        def relation_name
+          datum.dig(:hcp_params, :relation)
+        end
 
-          if object.respond_to?(:to_ary)
-            object.find { |hash| hash.dig('_links', 'self', 'href') == uri.to_s }
-          elsif object.dig('_links', 'self', 'href') == uri.to_s
-            object
-          end
+        def embedded
+          datum.dig(:hcp_params, :embedded)
         end
 
         def content_type_header
