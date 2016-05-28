@@ -20,6 +20,10 @@ module Excon
       assert response.rel('pump', hcp: true).get[:hcp]
     end
 
+    def test_hcp_response_without_existing_response
+      assert Excon.get('https://example.org/product/bicycle', hcp: true)
+    end
+
     def test_hcp_response_with_missing_embedding
       api      = Excon.get('https://www.example.org/api.json')
       response = api.rel('product', expand: { uid: 'bicycle' }, hcp: true).get

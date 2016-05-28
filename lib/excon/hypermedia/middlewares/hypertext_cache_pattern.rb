@@ -39,7 +39,7 @@ module Excon
         end
 
         def embedded
-          datum.dig(:hcp_params, :embedded)
+          datum.dig(:hcp_params, :embedded).to_h
         end
 
         def content_type_header
