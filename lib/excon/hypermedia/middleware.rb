@@ -16,6 +16,12 @@ module Excon
     # will be left alone by this middleware.
     #
     class Middleware < Excon::Middleware::Base
+      def request_call(datum)
+        orig_stack = @stack
+        @stack = Excon::HyperMedia::Middlewares::HypertextCachePattern.new(orig_stack)
+        super
+      end
+
       def response_call(datum)
         return super unless (content_type = datum.dig(:response, :headers, 'Content-Type').to_s)
 
