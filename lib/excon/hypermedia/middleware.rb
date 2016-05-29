@@ -17,8 +17,13 @@ module Excon
     #
     class Middleware < Excon::Middleware::Base
       def request_call(datum)
-        orig_stack = @stack
-        @stack = Excon::HyperMedia::Middlewares::HypertextCachePattern.new(orig_stack)
+        # if `hcp` is enabled, insert the `HypertextCachePattern` middleware in
+        # the middleware stack right after this one.
+        if datum[:hcp]
+          orig_stack = @stack
+          @stack = Excon::HyperMedia::Middlewares::HypertextCachePattern.new(orig_stack)
+        end
+
         super
       end
 
