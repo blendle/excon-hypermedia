@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/MethodLength
 
 require_relative '../test_helper'
 
