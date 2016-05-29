@@ -280,9 +280,12 @@ pump.resource.weight # => '2kg'
 ```
 
 This feature only works if you are sure the embedded resource is equal to the
-resource returned by the link relation. Because of this requirement, the default
-configuration has `hcp` disabled, you can either enable it per request (which
-also enables it for future requests in the chain), or enable it globally:
+resource returned by the link relation. Also, the embedded resource needs to
+have a `self` link in order to stub the correct endpoint.
+
+Because of these requirement, the default configuration has `hcp` disabled, you
+can either enable it per request (which also enables it for future requests in
+the chain), or enable it globally:
 
 ```ruby
 Excon.defaults[:hcp] = true

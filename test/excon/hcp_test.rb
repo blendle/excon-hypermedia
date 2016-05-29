@@ -30,6 +30,12 @@ module Excon
       assert_equal nil, response[:hcp]
     end
 
+    def test_hcp_response_with_embedding_but_missing_embed_for_request
+      handlebar = response.rel('handlebar', hcp: true).get
+
+      assert_equal nil, handlebar[:hcp]
+    end
+
     def test_hcp_response_with_embedded_array
       wheels = response.rel('wheels', hcp: true)
 
@@ -41,10 +47,6 @@ module Excon
       response = pump.rel('parts', expand: { uid: 'bicycle' }).get
 
       assert response[:hcp]
-    end
-
-    def test_hcp_not_working_for_non_get_requests
-      assert_equal nil, response.rel('pump', hcp: true).post[:hcp]
     end
 
     def test_hcp_resource
