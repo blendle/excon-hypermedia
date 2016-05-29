@@ -8,22 +8,8 @@ module Excon
   # Validate edge cases (or: non-happy path)
   #
   class EdgeCaseTest < HyperMediaTest
-    def setup
-      Excon.defaults[:mock] = true
-      Excon.defaults[:middlewares].push(Excon::HyperMedia::Middleware)
-
-      response = { headers: { 'Content-Type' => 'application/hal+json' } }
-      Excon.stub({ path: '/api.json' }, response.merge(body: api_body))
-      Excon.stub({ path: '/empty_json' }, response.merge(body: '{}'))
-    end
-
-    def teardown
-      Excon.stubs.clear
-      Excon.defaults[:middlewares].delete(Excon::HyperMedia::Middleware)
-    end
-
-    def api
-      Excon.get('https://www.example.org/api.json')
+    def empty_json_resource
+      empty_json_response.resource
     end
 
     def test_missing_middleware
@@ -47,42 +33,30 @@ module Excon
     end
 
     def test_missing_links
-      resource = Excon.get('https://www.example.org/empty_json').resource
-
-      assert_equal({}, resource._links.to_h)
+      assert_equal({}, empty_json_resource._links.to_h)
     end
 
     def test_missing_embedded
-      resource = Excon.get('https://www.example.org/empty_json').resource
-
-      assert_equal({}, resource._embedded.to_h)
+      assert_equal({}, empty_json_resource._embedded.to_h)
     end
 
     def test_missing_properties
-      resource = Excon.get('https://www.example.org/empty_json').resource
-
-      assert_equal({}, resource._properties.to_h)
+      assert_equal({}, empty_json_resource._properties.to_h)
     end
 
     def test_unknown_property
-      resource = Excon.get('https://www.example.org/api.json').resource
-
-      assert_equal nil, resource._properties.invalid
-      assert_equal nil, resource._properties['invalid']
+      assert_equal nil, api.resource._properties.invalid
+      assert_equal nil, api.resource._properties['invalid']
     end
 
     def test_unknown_link
-      resource = Excon.get('https://www.example.org/empty_json').resource
-
-      assert_equal nil, resource._links.invalid
-      assert_equal nil, resource._links['invalid']
+      assert_equal nil, empty_json_resource._links.invalid
+      assert_equal nil, empty_json_resource._links['invalid']
     end
 
     def test_unknown_embed
-      resource = Excon.get('https://www.example.org/api.json').resource
-
-      assert_equal nil, resource._embedded.invalid
-      assert_equal nil, resource._embedded['invalid']
+      assert_equal nil, api.resource._embedded.invalid
+      assert_equal nil, api.resource._embedded['invalid']
     end
   end
 end

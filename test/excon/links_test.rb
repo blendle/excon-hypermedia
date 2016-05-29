@@ -14,10 +14,10 @@ module Excon
         {
           "_links": {
             "self": {
-              "href": "https://www.example.org/product/bicycle"
+              "href": "https://example.org/product/bicycle"
             },
             "parts": {
-              "href": "https://www.example.org/product/bicycle/parts"
+              "href": "https://example.org/product/bicycle/parts"
             }
           }
         }

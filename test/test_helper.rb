@@ -1,171 +1,59 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/MethodLength
-# rubocop:disable Metrics/LineLength
-# rubocop:disable Metrics/ClassLength
-# rubocop:disable Metrics/AbcSize
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'excon/hypermedia'
 require 'minitest/autorun'
+require 'open4'
+require_relative 'support/responses'
+
+Excon.defaults.merge!(
+  connect_timeout: 1,
+  read_timeout: 1,
+  write_timeout: 1
+)
+
+@server_pid, _, _, e = Open4.popen4(File.expand_path('support/server.rb', __dir__))
+until e.gets =~ /HTTPServer#start/; end
+
+Minitest.after_run do
+  Process.kill(9, @server_pid)
+  Process.wait(@server_pid)
+end
 
 module Excon
   # HyperMediaTest
   #
   class HyperMediaTest < Minitest::Test
-    def setup
-      Excon.defaults[:mock] = true
-      Excon.defaults[:middlewares].push(Excon::HyperMedia::Middleware)
+    def api
+      Excon.get('http://localhost:8000/api.json')
+    end
 
-      response = { headers: { 'Content-Type' => 'application/hal+json' } }
-      Excon.stub({ method: :get, path: '/api.json' }, response.merge(body: api_body))
-      Excon.stub({ method: :get, path: '/product/bicycle' }, response.merge(body: bicycle_body))
-      Excon.stub({ method: :get, path: '/product/bicycle/wheels/front' }, response.merge(body: front_wheel_body))
-      Excon.stub({ method: :get, path: '/product/bicycle/wheels/rear' }, response.merge(body: rear_wheel_body))
-      Excon.stub({ path: '/product/pump' }, response.merge(body: pump_body))
-      Excon.stub({ method: :get, path: '/product/pump/parts' }, response.merge(body: parts_body))
-      Excon.stub({ method: :get, path: '/product/handlebar' }, response.merge(body: handlebar_body))
-      Excon.stub({ method: :get, path: '/api_v2.json' }, body: api_body, headers: { 'Content-Type' => 'application/json' })
+    def api_v2
+      Excon.get('http://localhost:8000/api_v2.json', hypermedia: true)
+    end
+
+    def empty_json_response
+      Excon.get('http://localhost:8000/empty_json')
+    end
+
+    def bicycle
+      @bicycle ||= Excon.get('http://localhost:8000/product/bicycle')
+    end
+
+    def setup
+      Excon.defaults[:middlewares].push(Excon::HyperMedia::Middleware)
     end
 
     def teardown
-      Excon.stubs.clear
       Excon.defaults[:middlewares].delete(Excon::HyperMedia::Middleware)
-      Excon.defaults[:mock] = true
     end
 
     def data(name)
-      JSON.parse(send("#{name}_body"))
+      JSON.parse(Test::Response.send("#{name}_body"))
     end
 
-    def api_body
-      <<-EOF
-       {
-         "_links": {
-           "self": {
-             "href": "https://www.example.org/api.json"
-           },
-           "product": {
-             "href": "https://www.example.org/product/{uid}",
-             "templated": true
-           }
-         }
-       }
-     EOF
-    end
-
-    def bicycle_body
-      <<-EOF
-        {
-          "_links": {
-            "self": {
-              "href": "https://www.example.org/product/bicycle"
-            },
-            "handlebar": {
-              "href": "https://www.example.org/product/handlebar"
-            },
-            "object_id": {
-              "href": "https://www.example.org/product/bicycle/object_id_as_text"
-            },
-            "pump": {
-              "href": "https://www.example.org/product/pump"
-            },
-            "wheels": [
-              { "href": "https://www.example.org/product/bicycle/wheels/front" },
-              { "href": "https://www.example.org/product/bicycle/wheels/rear" }
-            ]
-          },
-          "bike-type": "Mountain Bike",
-          "BMX": false,
-          "derailleurs": {
-            "back": 7,
-            "front": 3
-          },
-          "name": "bicycle",
-          "reflectors": true,
-          "_embedded": {
-            "pump": #{pump_body},
-            "wheels": [#{front_wheel_body}, #{rear_wheel_body}]
-          }
-        }
-      EOF
-    end
-
-    def handlebar_body
-      <<-EOF
-        {
-          "_links": {
-            "self": {
-              "href": "https://www.example.org/product/handlebar"
-            }
-          },
-          "material": "Carbon fiber",
-          "reach": "75mm",
-          "bend": "compact"
-        }
-      EOF
-    end
-
-    def pump_body
-      <<-EOF
-        {
-          "_links": {
-            "self": {
-              "href": "https://www.example.org/product/pump"
-            },
-            "parts": {
-              "href": "https://www.example.org/product/pump/parts"
-            }
-          },
-          "weight": "2kg",
-          "type": "Floor Pump",
-          "valve-type": "Presta",
-          "_embedded": {
-            "parts": #{parts_body}
-          }
-
-        }
-      EOF
-    end
-
-    def parts_body
-      <<-EOF
-        {
-          "_links": {
-            "self": {
-              "href": "https://www.example.org/product/pump/parts"
-            }
-          },
-          "count": 47
-        }
-      EOF
-    end
-
-    def rear_wheel_body
-      <<-EOF
-        {
-          "_links": {
-            "self": {
-              "href": "https://www.example.org/product/bicycle/wheels/rear"
-            }
-          },
-          "position": "rear",
-          "lacing_pattern": "Radial"
-        }
-      EOF
-    end
-
-    def front_wheel_body
-      <<-EOF
-        {
-          "_links": {
-            "self": {
-              "href": "https://www.example.org/product/bicycle/wheels/front"
-            }
-          },
-          "position": "front",
-          "lacing_pattern": "Radial/2-Cross"
-        }
-      EOF
+    def url(path)
+      File.join('http://localhost:8000', path)
     end
   end
 end

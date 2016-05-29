@@ -14,7 +14,7 @@ module Excon
         {
           "_links": {
             "hello": {
-              "href": "http://www.example.com/hello/{location}"
+              "href": "https://example.org/hello/{location}"
             }
           },
           "uid": "universe",

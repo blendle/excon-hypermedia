@@ -10,20 +10,16 @@ module Excon
   # Verifies the Excon connection consuming HyperMedia APIs.
   #
   class IntegrationTest < HyperMediaTest
-    def api
-      Excon.get('https://www.example.org/api.json')
-    end
-
     def test_request
       response = api.rel('product', expand: { uid: 'bicycle' }).get
 
-      assert response.body.include?('https://www.example.org/product/bicycle')
+      assert response.body.include?('/product/bicycle')
     end
 
     def test_request_using_link_rel
       response = api.resource._links.product.rel(expand: { uid: 'bicycle' }).get
 
-      assert response.body.include?('https://www.example.org/product/bicycle')
+      assert response.body.include?('/product/bicycle')
     end
 
     def test_nested_request
@@ -45,7 +41,7 @@ module Excon
     def test_expand_in_get
       response = api.rel('product').get(expand: { uid: 'bicycle' })
 
-      assert response.body.include?('https://www.example.org/product/bicycle')
+      assert response.body.include?('/product/bicycle')
     end
 
     def test_link
@@ -89,14 +85,9 @@ module Excon
     end
 
     def test_request_with_json_content_type
-      api      = Excon.get('https://www.example.org/api_v2.json', hypermedia: true)
-      response = api.rel('product', expand: { uid: 'bicycle' }).get
+      response = api_v2.rel('product', expand: { uid: 'bicycle' }).get
 
-      assert response.body.include?('https://www.example.org/product/bicycle')
-    end
-
-    def teardown
-      Excon.stubs.clear
+      assert response.body.include?('/product/bicycle')
     end
   end
 end

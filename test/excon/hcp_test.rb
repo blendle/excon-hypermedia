@@ -9,7 +9,7 @@ module Excon
   #
   class HCPTest < HyperMediaTest
     def response
-      @response ||= Excon.get('https://example.org/product/bicycle')
+      bicycle
     end
 
     def test_non_hcp_response
@@ -21,11 +21,10 @@ module Excon
     end
 
     def test_hcp_response_without_existing_response
-      assert Excon.get('https://example.org/product/bicycle', hcp: true)
+      assert Excon.get(url('/product/bicycle'), hcp: true)
     end
 
     def test_hcp_response_with_missing_embedding
-      api      = Excon.get('https://www.example.org/api.json')
       response = api.rel('product', expand: { uid: 'bicycle' }, hcp: true).get
 
       assert_equal nil, response[:hcp]

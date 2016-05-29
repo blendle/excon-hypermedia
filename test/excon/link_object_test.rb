@@ -10,17 +10,17 @@ module Excon
   #
   class LinkTest < Minitest::Test
     def self
-      '{ "href": "https://www.example.org/hello" }'
+      '{ "href": "https://example.org/hello" }'
     end
 
     def templated
-      '{ "href": "https://www.example.org/hello/{receiver}", "templated": "true" }'
+      '{ "href": "https://example.org/hello/{receiver}", "templated": "true" }'
     end
 
     def full
       <<-EOF
         {
-          "href": "https://www.example.org/goodbye/{receiver}",
+          "href": "https://example.org/goodbye/{receiver}",
           "templated": "true",
           "type": "json",
           "deprecation": true,

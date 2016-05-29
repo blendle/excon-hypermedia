@@ -9,7 +9,7 @@ module Excon
   #
   class ResponseTest < HyperMediaTest
     def response
-      @response ||= Excon.get('https://example.org/product/bicycle')
+      bicycle
     end
 
     def test_response

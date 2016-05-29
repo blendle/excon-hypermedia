@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 0.40'
   spec.add_development_dependency 'pry', '~> 0.10'
   spec.add_development_dependency 'm', '~> 1.5'
+  spec.add_development_dependency 'open4', '~> 1.3'
 
   spec.add_dependency 'backport_dig' if RUBY_VERSION < '2.3'
   spec.add_dependency 'excon', '~> 0.49'
