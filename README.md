@@ -294,7 +294,7 @@ Excon.defaults[:hcp] = true
 ### shortcuts
 
 While the above examples shows the clean separation between the different
-concepts like `response`, `resource`, `links`, `properties` and `emeds`.
+concepts like `response`, `resource`, `links`, `properties` and `embeds`.
 
 Traversing these objects always starts from the response object. To make moving
 around a bit faster, there are several methods available on the
