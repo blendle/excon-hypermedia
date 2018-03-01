@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/MethodLength
+
 # rubocop:disable Metrics/ModuleLength
 
 # :no-doc:
@@ -9,7 +9,7 @@ module Test
     module_function
 
     def api_body
-      <<-EOF
+      <<-JSON
        {
          "_links": {
            "self": {
@@ -21,11 +21,11 @@ module Test
            }
          }
        }
-     EOF
+     JSON
     end
 
     def bicycle_body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -58,11 +58,11 @@ module Test
             "wheels": [#{front_wheel_body}, #{rear_wheel_body}]
           }
         }
-      EOF
+      JSON
     end
 
     def handlebar_body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -73,11 +73,11 @@ module Test
           "reach": "75mm",
           "bend": "compact"
         }
-      EOF
+      JSON
     end
 
     def pump_body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -95,11 +95,11 @@ module Test
           }
 
         }
-      EOF
+      JSON
     end
 
     def parts_body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -108,11 +108,11 @@ module Test
           },
           "count": 47
         }
-      EOF
+      JSON
     end
 
     def rear_wheel_body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -122,11 +122,11 @@ module Test
           "position": "rear",
           "lacing_pattern": "Radial"
         }
-      EOF
+      JSON
     end
 
     def front_wheel_body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -136,7 +136,9 @@ module Test
           "position": "front",
           "lacing_pattern": "Radial/2-Cross"
         }
-      EOF
+      JSON
     end
   end
 end
+
+# rubocop:enable Metrics/ModuleLength

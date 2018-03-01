@@ -17,7 +17,7 @@ module Excon
     end
 
     def full
-      <<-EOF
+      <<-JSON
         {
           "href": "https://example.org/goodbye/{receiver}",
           "templated": "true",
@@ -28,7 +28,7 @@ module Excon
           "title": "Goodbye!",
           "hreflang": "en-gb"
         }
-      EOF
+      JSON
     end
 
     def data(name)

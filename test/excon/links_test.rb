@@ -9,7 +9,7 @@ module Excon
   #
   class LinksTest < Minitest::Test
     def body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "self": {
@@ -20,7 +20,7 @@ module Excon
             }
           }
         }
-      EOF
+      JSON
     end
 
     def data
@@ -36,7 +36,7 @@ module Excon
     end
 
     def test_link_properties
-      assert_equal %w(self parts), links.to_h.keys
+      assert_equal %w[self parts], links.to_h.keys
     end
   end
 end

@@ -45,8 +45,19 @@ module Excon
       # The second notation returns `nil` on missing keys, the first should do
       # as well.
       #
-      def method_missing(_)
+      def method_missing(_) # rubocop:disable Style/MethodMissing
         nil
+      end
+
+      # respond_to_missing?
+      #
+      # Checking if a key exists should be possible using `respond_to?`:
+      #
+      #   collection.respond_to?(:hello_world)
+      #   # => false
+      #
+      def respond_to_missing?(_, _ = false)
+        super
       end
 
       def to_properties

@@ -9,7 +9,7 @@ module Excon
   #
   class PropertiesTest < Minitest::Test
     def body
-      <<-EOF
+      <<-JSON
         {
           "size": "49CM",
           "bike-type": "Mountain Bike",
@@ -20,7 +20,7 @@ module Excon
           "reflectors": true,
           "BMX": false
         }
-      EOF
+      JSON
     end
 
     def data

@@ -5,7 +5,15 @@ require 'backport_dig' if RUBY_VERSION < '2.3'
 Excon.defaults[:middlewares].delete(Excon::Addressable::Middleware)
 Excon.defaults[:middlewares].unshift(Excon::Addressable::Middleware)
 
+# Excon
+#
+# We inject the `expand` key to the allowed lists of keys to be used when
+# creating a request, or connection object. Excon does not enforce this yet, but
+# it does print a warning, so this makes things future-proof.
 module Excon
+  VALID_REQUEST_KEYS.push(:hcp, :embedded, :hypermedia)
+  VALID_CONNECTION_KEYS.push(:hcp, :embedded, :hypermedia)
+
   module HyperMedia
     # Middleware
     #

@@ -9,7 +9,7 @@ module Excon
   #
   class ResourceObjectTest < Minitest::Test
     def body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "hello": {
@@ -19,7 +19,7 @@ module Excon
           "uid": "universe",
           "hello": "world"
         }
-      EOF
+      JSON
     end
 
     def data
@@ -42,11 +42,16 @@ module Excon
       assert_equal 'universe', resource.uid
       assert_equal 'world', resource.hello
       assert_equal 'world', resource['hello']
-      assert_equal nil, resource['invalid']
+      assert_nil resource['invalid']
     end
 
     def test_correctly_raising_no_method_error
       assert_raises(NoMethodError) { resource.invalid }
+    end
+
+    def test_correctly_respond_to
+      assert_equal true, resource.respond_to?(:hello)
+      assert_equal false, resource.respond_to?(:invalid)
     end
   end
 end
