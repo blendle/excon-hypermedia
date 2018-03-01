@@ -49,6 +49,17 @@ module Excon
         nil
       end
 
+      # respond_to_missing?
+      #
+      # Checking if a key exists should be possible using `respond_to?`:
+      #
+      #   collection.respond_to?(:hello_world)
+      #   # => false
+      #
+      def respond_to_missing?(_, _ = false)
+        super
+      end
+
       def to_properties
         collection.each do |key, value|
           key = key.downcase

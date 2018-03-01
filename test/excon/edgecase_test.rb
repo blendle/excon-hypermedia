@@ -49,6 +49,10 @@ module Excon
       assert_equal nil, api.resource._properties['invalid']
     end
 
+    def test_unknown_property_respond_to
+      assert_equal false, api.resource._properties.respond_to?(:invalid)
+    end
+
     def test_unknown_link
       assert_equal nil, empty_json_resource._links.invalid
       assert_equal nil, empty_json_resource._links['invalid']

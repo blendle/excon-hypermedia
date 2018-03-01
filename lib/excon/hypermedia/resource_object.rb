@@ -60,6 +60,10 @@ module Excon
       def method_missing(method_name, *_)
         _properties.respond_to?(method_name) ? _properties.send(method_name) : super
       end
+
+      def respond_to_missing?(method_name, _ = false)
+        _properties.respond_to?(method_name) || super
+      end
     end
   end
 end
