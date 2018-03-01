@@ -13,7 +13,7 @@ module Excon
     end
 
     def test_non_hcp_response
-      assert_equal nil, response[:hcp]
+      assert_nil response[:hcp]
     end
 
     def test_hcp_response
@@ -27,13 +27,13 @@ module Excon
     def test_hcp_response_with_missing_embedding
       response = api.rel('product', expand: { uid: 'bicycle' }, hcp: true).get
 
-      assert_equal nil, response[:hcp]
+      assert_nil response[:hcp]
     end
 
     def test_hcp_response_with_embedding_but_missing_embed_for_request
       handlebar = response.rel('handlebar', hcp: true).get
 
-      assert_equal nil, handlebar[:hcp]
+      assert_nil handlebar[:hcp]
     end
 
     def test_hcp_response_with_embedded_array

@@ -42,7 +42,7 @@ module Excon
       assert_equal 'universe', resource.uid
       assert_equal 'world', resource.hello
       assert_equal 'world', resource['hello']
-      assert_equal nil, resource['invalid']
+      assert_nil resource['invalid']
     end
 
     def test_correctly_raising_no_method_error
