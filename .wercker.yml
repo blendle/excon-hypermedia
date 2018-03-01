@@ -6,6 +6,14 @@ ruby-latest:
     name: tests
     code: bundle exec rake
 
+ruby-25:
+  box: ruby:2.5
+  steps:
+  - bundle-install
+  - script:
+    name: tests
+    code: bundle exec rake
+
 ruby-23:
   box: ruby:2.3
   steps:
