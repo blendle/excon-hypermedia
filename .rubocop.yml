@@ -10,4 +10,4 @@ Metrics/LineLength:
   Max: 100
 
 Lint/EndAlignment:
-  AlignWith: variable
+  EnforcedStyleAlignWith: variable

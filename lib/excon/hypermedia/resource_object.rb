@@ -11,7 +11,7 @@ module Excon
     # Represents a resource.
     #
     class ResourceObject
-      RESERVED_PROPERTIES = %w(_links _embedded).freeze
+      RESERVED_PROPERTIES = %w[_links _embedded].freeze
 
       def initialize(data)
         @data = data

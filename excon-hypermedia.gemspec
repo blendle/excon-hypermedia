@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # encoding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'excon/hypermedia/version'
@@ -7,15 +8,15 @@ require 'excon/hypermedia/version'
 Gem::Specification.new do |spec|
   spec.name          = 'excon-hypermedia'
   spec.version       = Excon::HyperMedia::VERSION
-  spec.authors       = %w(Jean Mertz)
-  spec.email         = %w(jean@mertz.fm)
+  spec.authors       = %w[Jean Mertz]
+  spec.email         = %w[jean@mertz.fm]
 
   spec.summary       = 'Excon, with Hypermedia traversing baked in.'
   spec.description   = 'Excon, with Hypermedia traversing baked in.'
   spec.homepage      = 'https://github.com/JeanMertz/excon-hypermedia'
   spec.license       = 'MIT'
   spec.files         = `git ls-files -z`.split("\x0")
-  spec.require_paths = %w(lib)
+  spec.require_paths = %w[lib]
 
   spec.add_development_dependency 'bundler', '~> 1.16'
   spec.add_development_dependency 'm', '~> 1.5'

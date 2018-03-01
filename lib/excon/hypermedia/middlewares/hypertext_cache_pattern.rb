@@ -31,7 +31,7 @@ module Excon
           end
 
           super
-        rescue => e
+        rescue StandardError => e
           raise unless e.class == Excon::Errors::StubNotFound
 
           # If a request was made to a non-stubbed resource, don't use the Mock

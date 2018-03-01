@@ -9,7 +9,7 @@ module Excon
   #
   class ResourceObjectTest < Minitest::Test
     def body
-      <<-EOF
+      <<-JSON
         {
           "_links": {
             "hello": {
@@ -19,7 +19,7 @@ module Excon
           "uid": "universe",
           "hello": "world"
         }
-      EOF
+      JSON
     end
 
     def data

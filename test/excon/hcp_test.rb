@@ -39,7 +39,7 @@ module Excon
     def test_hcp_response_with_embedded_array
       wheels = response.rel('wheels', hcp: true)
 
-      assert wheels.map(&:get).all? { |res| res[:hcp] }
+      assert(wheels.map(&:get).all? { |res| res[:hcp] })
     end
 
     def test_nested_hcp_responses
