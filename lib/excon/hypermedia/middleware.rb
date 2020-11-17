@@ -36,7 +36,9 @@ module Excon
       end
 
       def response_call(datum)
-        return super unless (content_type = datum.dig(:response, :headers, 'Content-Type').to_s)
+        return super unless (headers = datum.dig(:response, :headers))
+        return super unless (match = headers.find { |k, v| k.downcase == 'content-type' })
+        content_type = match[1].to_s
 
         datum[:response][:hypermedia] = if datum[:hypermedia].nil?
           content_type.include?('hal+json')
