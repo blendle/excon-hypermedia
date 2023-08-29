@@ -13,6 +13,8 @@ module Excon
     class ResourceObject
       RESERVED_PROPERTIES = %w[_links _embedded].freeze
 
+      attr_reader :data
+
       def initialize(data)
         @data = data
       end
