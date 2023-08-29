@@ -31,7 +31,7 @@ module Excon
     end
 
     def test_resource
-      assert_equal data, resource.instance_variable_get(:@data)
+      assert_equal data, resource.data
     end
 
     def test_links
